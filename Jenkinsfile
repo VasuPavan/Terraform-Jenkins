@@ -11,7 +11,7 @@ pipeline {
 
    agent  any
     stages {
-        stage('checkout') {
+        stage('Pre-Build') {
             steps {
                  script{
                         dir("terraform")
