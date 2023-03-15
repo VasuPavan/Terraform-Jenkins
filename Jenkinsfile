@@ -1,7 +1,9 @@
 pipeline {
 
     parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?'),
+        booleanParam(defaultValue: true, description: 'Create AWS Infra', name: 'apply'), 
+        booleanParam(defaultValue: true, description: 'Destroy the AWS Infra', name: 'destroy')
     } 
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
