@@ -1,9 +1,9 @@
 pipeline {
 
     parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-        booleanParam(defaultValue: true, description: 'Create AWS Infra', name: 'apply')
-        booleanParam(defaultValue: true, description: 'Destroy the AWS Infra', name: 'destroy')
+        //booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        booleanParam(defaultValue: true, description: 'Create AWS Infrastructure', name: 'apply')
+        booleanParam(defaultValue: true, description: 'Destroy the AWS Infrastructure', name: 'destroy')
     } 
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
@@ -23,34 +23,29 @@ pipeline {
                 }
             }
 
-        stage('Plan') {
+        stage('Infra-Init/Plan') {
             steps {
                 sh 'pwd;cd terraform/ ; terraform init'
                 sh "pwd;cd terraform/ ; terraform plan -out tfplan"
                 sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
             }
         }
-        stage('Approval') {
-           when {
-               not {
-                   equals expected: true, actual: params.autoApprove
-               }
-           }
 
-           steps {
-               script {
-                    def plan = readFile 'terraform/tfplan.txt'
-                    input message: "Do you want to apply the plan?",
-                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-               }
-           }
-       }
+        stage('Infra-Apply') {
+            if(param.apply){
+                steps {
+                    sh "pwd;cd terraform/ ; terraform apply --auto-approve"
+                }
+            } 
+        }
 
-        stage('Apply') {
-            steps {
-                sh "pwd;cd terraform/ ; terraform apply -input=false tfplan"
-            }
+        stage('Infra-Destroy') {
+            if(param.destroy){
+                steps {
+                    sh "pwd;cd terraform/ ; terraform destroy --auto-approve"
+                }
+            }    
         }
     }
 
-  }
+}
