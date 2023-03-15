@@ -1,7 +1,6 @@
 pipeline {
 
     parameters {
-        //booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
         booleanParam(defaultValue: true, description: 'Create AWS Infrastructure', name: 'apply')
         booleanParam(defaultValue: true, description: 'Destroy the AWS Infrastructure', name: 'destroy')
     } 
@@ -32,19 +31,19 @@ pipeline {
         }
 
         stage('Infra-Apply') {
-            if(params.apply){
+            when { expression { return params.apply } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform apply --auto-approve"
                 }
-            } 
+             
         }
 
         stage('Infra-Destroy') {
-            if(params.destroy){
+            when { expression { return params.destroy } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform destroy --auto-approve"
                 }
-            }    
+                
         }
     }
 
