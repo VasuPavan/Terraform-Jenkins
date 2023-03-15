@@ -22,15 +22,16 @@ pipeline {
                 }
             }
 
-        stage('Infra-Init/Plan') {
+        stage('INFRA-Init/Plan') {
             steps {
                 sh 'pwd;cd terraform/ ; terraform init'
-                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
+                sh "pwd;cd terraform/ ; terraform plan"
+                //sh "pwd;cd terraform/ ; terraform plan -out tfplan"
                 //sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
             }
         }
 
-        stage('Infra-Apply') {
+        stage('INFRA-Apply') {
             when { expression { return params.apply } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform apply --auto-approve"
@@ -39,7 +40,7 @@ pipeline {
              
         }
 
-        stage('Infra-Destroy') {
+        stage('INFRA-Destroy') {
             when { expression { return params.destroy } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform destroy --auto-approve"
