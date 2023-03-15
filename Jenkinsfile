@@ -34,6 +34,7 @@ pipeline {
             when { expression { return params.apply } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform apply --auto-approve"
+                    echo "Infra-Apply - params.applyc: ${params.apply}"
                 }
              
         }
@@ -42,6 +43,7 @@ pipeline {
             when { expression { return params.destroy } }
                 steps {
                     sh "pwd;cd terraform/ ; terraform destroy --auto-approve"
+                    echo "Infra-Apply - params.applyc: ${params.apply}"
                 }
                 
         }
