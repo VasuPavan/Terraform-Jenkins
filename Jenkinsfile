@@ -32,7 +32,7 @@ pipeline {
         }
 
         stage('Infra-Apply') {
-            if(param.apply){
+            if(params.apply){
                 steps {
                     sh "pwd;cd terraform/ ; terraform apply --auto-approve"
                 }
@@ -40,7 +40,7 @@ pipeline {
         }
 
         stage('Infra-Destroy') {
-            if(param.destroy){
+            if(params.destroy){
                 steps {
                     sh "pwd;cd terraform/ ; terraform destroy --auto-approve"
                 }
